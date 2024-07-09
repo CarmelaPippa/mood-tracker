@@ -1,0 +1,12 @@
+:root {
+  --color-bg: #ebf3fb;
+  --color-primary: #273644;
+  --color-btn: #ff6666;
+
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: var(--color-primary);
+}
