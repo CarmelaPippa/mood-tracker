@@ -9,7 +9,7 @@ import arrow from "../assets/img/arrow_forward.svg";
 import feelingsData from "./feelingsData.js";
 
 export default function Login(submitData) {
-  const apiKeys = "419bf51994e709c5f06805b46d038b94";
+  const apiKeys = import.meta.env.VITE_SOME_APIKEY;
 
   // State variables for selected card and user comment
   const [selectedCard, setSelectedCard] = useState(null);
