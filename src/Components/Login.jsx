@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 
@@ -12,7 +13,7 @@ export default function Login(submitData) {
   const apiKeys = import.meta.env.VITE_APIKEY;
 
   // State variables for selected card and user comment
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedMood, setSelectedMood] = useState(null);
   const [comment, setComment] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export default function Login(submitData) {
 
   // Function to handle card selection
   const handleCardSelect = (e) => {
-    setSelectedCard(e);
+    selectedMood(e);
   };
   // Function to handle comment input`
   const handleInput = (event) => {
@@ -90,7 +91,7 @@ export default function Login(submitData) {
   const handleSubmit = (event) => {
     event.preventDefault();
     submitData = {
-      card: selectedCard,
+      mood: selectedMood,
       comment: comment || "No Comment",
       day: getDayName(),
       weather: weatherData, // Include the weather data
@@ -112,7 +113,7 @@ export default function Login(submitData) {
             <div
               key={card.id}
               className={`card ${
-                selectedCard && selectedCard.id === card.id
+                selectedMood && selectedMood.id === card.id
                   ? "selected-card"
                   : ""
               }`}
