@@ -81,7 +81,7 @@ export default function Login(submitData) {
 
   // Function to handle card selection
   const handleCardSelect = (e) => {
-    selectedMood(e);
+    setSelectedMood(e);
   };
   // Function to handle comment input`
   const handleInput = (event) => {
