@@ -1,15 +1,44 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unescaped-entities */
-
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
 import arrow from "../assets/img/arrow_forward.svg";
 import feelingsData from "./feelingsData.js";
 
-export default function Login(submitData) {
+const date = new Date();
+const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+const getDayName = () => {
+  return days[date.getDay()];
+};
+
+// Function to get greeting based on the current time
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  return hour < 12
+    ? "Good morning!"
+    : hour < 18
+    ? "Good afternoon!"
+    : "Good evening!";
+};
+
+const saveMood = (day, newElement) => {
+  const saveElement = JSON.parse(localStorage.getItem("dailyData") || "[]");
+
+  saveElement.push({ day: day, mood: newElement });
+  localStorage.setItem("dailyData", JSON.stringify(saveElement));
+  console.log("save", saveElement);
+};
+
+export default function Login() {
   const apiKeys = import.meta.env.VITE_APIKEY;
 
   // State variables for selected card and user comment
@@ -19,27 +48,8 @@ export default function Login(submitData) {
   const navigate = useNavigate();
 
   // Get the current date
-  const date = new Date();
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
 
-  function saveMood(element, newElement) {
-    const saveElement = JSON.parse(localStorage.getItem("dailyData") || "{}");
-    if (!saveElement[element]) {
-      saveElement[element] = [];
-    }
-    saveElement[element].push(newElement);
-    localStorage.setItem("dailyData", JSON.stringify(saveElement));
-  }
-
-  const getWeather = async () => {
+  const getWeather = useCallback(async () => {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=stockholm&appid=${apiKeys}&units=metric`;
     const options = {
       method: "GET",
@@ -54,7 +64,7 @@ export default function Login(submitData) {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [apiKeys]);
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -63,44 +73,35 @@ export default function Login(submitData) {
     };
 
     fetchWeather();
-  }, []);
-
-  // Function to get greeting based on the current time
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    return hour < 12
-      ? "Good morning!"
-      : hour < 18
-      ? "Good afternoon!"
-      : "Good evening!";
-  };
-
-  const getDayName = () => {
-    return days[date.getDay()];
-  };
+  }, [getWeather]);
 
   // Function to handle card selection
-  const handleCardSelect = (e) => {
+  const handleCardSelect = useCallback((e) => {
     setSelectedMood(e);
-  };
+  }, []);
+
   // Function to handle comment input`
-  const handleInput = (event) => {
+  const handleInput = useCallback((event) => {
     setComment(event.target.value);
-  };
+  }, []);
+
   // Function to handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    submitData = {
-      mood: selectedMood,
-      comment: comment || "No Comment",
-      day: getDayName(),
-      weather: weatherData, // Include the weather data
-    };
-    console.log("submitData", submitData);
-    const today = new Date().toISOString().split("T")[0];
-    saveMood(today, submitData);
-    navigate("/summary");
-  };
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault();
+      const submitData = {
+        mood: selectedMood,
+        comment: comment || "No Comment",
+        day: getDayName(),
+        weather: weatherData, // Include the weather data
+      };
+      console.log("");
+      const today = new Date().toISOString().split("T")[0];
+      saveMood(today, submitData);
+      navigate("/summary");
+    },
+    [comment, navigate, selectedMood, weatherData]
+  );
 
   return (
     <>
@@ -125,7 +126,7 @@ export default function Login(submitData) {
             </div>
           ))}
         </div>
-        <h2>Let's write about it..</h2>
+        <h2>{"Let's write about it.."}</h2>
 
         <input
           type="text"

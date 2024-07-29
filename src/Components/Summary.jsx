@@ -2,14 +2,14 @@ import SingleCard from "./SingleCard";
 import "./singleCard.css";
 
 export default function Summary() {
+  const arrayData = JSON.parse(localStorage.getItem("dailyData"));
   return (
     <>
       <h1>Weekly report</h1>
       <div className="summary__cards">
-        <SingleCard></SingleCard>
-        {/* {arrayData.map((card) => {
-          <SingleCard key={card.id} name={card.name} />;
-        })} */}
+        {arrayData.map((card, index) => (
+          <SingleCard key={index} day={card.mood.day} />
+        ))}
       </div>
     </>
   );

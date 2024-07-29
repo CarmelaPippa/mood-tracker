@@ -1,11 +1,12 @@
 import "./singleCard.css";
+import PropTypes from "prop-types";
 
-export default function SingleCard() {
+export default function SingleCard({ day }) {
   return (
     <>
       <div className="summary__card">
         <div className="titleDay">
-          <p>Monday</p>
+          <p>{day}</p>
           <p>weather</p>
         </div>
         <div className="dayly__mood">
@@ -20,3 +21,5 @@ export default function SingleCard() {
     </>
   );
 }
+
+SingleCard.propTypes = { day: PropTypes.string.isRequired };
